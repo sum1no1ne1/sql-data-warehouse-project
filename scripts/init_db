@@ -1,0 +1,53 @@
+/******************************************************************************************
+ Script Name : 00_create_datawarehouse.sql
+ Purpose     : Initialize the DataWarehouse database and create foundational schemas
+ Author      : Your Name
+ Created On  : 14-Apr-2026
+ Platform    : SQL Server
+
+ Description :
+    This script performs the initial setup for the Data Warehouse environment.
+
+    Actions performed:
+    1. Switches context to the master database
+    2. Checks whether the DataWarehouse database already exists
+    3. Drops the existing database safely if present
+    4. Creates a fresh DataWarehouse database
+    5. Switches context to the new database
+    6. Creates Bronze, Silver, and Gold schemas
+
+ Schema Purpose :
+    Bronze -> Raw source data ingestion layer
+    Silver -> Cleansed and transformed data layer
+    Gold   -> Reporting and analytics layer (facts and dimensions)
+
+ Notes :
+    - Safe to rerun multiple times
+    - Existing connections are terminated before dropping the database
+    - Intended for ETL / DWH project initialization
+******************************************************************************************/
+
+use master;
+
+-- Drop and recreate the 'DataWarehouse' database
+IF EXISTS (SELECT 1 FROM sys.databases WHERE name= 'DataWarehouse')
+BEGIN
+	ALTER DATABASE DataWarehouse SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+	DROP DATABASE DataWarehouse;
+END
+GO
+
+-- Create  the 'DataWarehouse' database
+CREATE DATABASE DataWarehouse;
+GO
+
+USE DataWareHouse;
+GO
+
+--Create Schemas
+CREATE SCHEMA Bronze;
+GO
+CREATE SCHEMA Silver;
+GO
+CREATE SCHEMA Gold;
+GO
